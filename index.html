@@ -4,19 +4,34 @@
     <title>JNews</title>
     <style type="text/css">
       body {
-          line-height: 1.42857;
-          color: #404040;
-          background-color: #fff;
-          font-family: -apple-system,BlinkMacSystemFont,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif;
-          font-feature-settings: "tnum";
-          font-variant: tabular-nums;
+        line-height: 1.42857;
+        color: #404040;
+        background-color: #aaa;
+        font-family: -apple-system,BlinkMacSystemFont,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-feature-settings: "tnum";
+        font-variant: tabular-nums;
+      }
+      .main{
+        text-align: center; /*让div内部文字居中*/
+        background-color: #fff;
+        border-radius: 20px;
+        width: 400px;
+        height: 250px;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
       }
     </style>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
   </head>
   <body>
-    <H1>大新闻 
-      <span id="busuanzi_container_site_pv">+<span id="busuanzi_value_site_pv"></span>s</span>
-    </H1>
+    <div class="main">
+      <h1>大新闻 
+        <span id="busuanzi_container_site_pv">+<span id="busuanzi_value_site_pv"></span>s</span>
+      </h1>
+    </div>
   </body>
 </html>
