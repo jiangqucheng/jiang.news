@@ -35,7 +35,7 @@ body {
 
 .child-small {
   font: 30px/30px "Libre Franklin";
-  font-weight: 300;
+  font-weight: 600;
 }
 
 .child-font {
@@ -45,7 +45,7 @@ body {
   letter-spacing: -5px;
   mix-blend-mode: overlay;
   text-shadow: 0 0 10px #fff;
-  color: #fff7;
+  color: #fff8;
 }
 
 svg {
