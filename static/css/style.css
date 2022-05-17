@@ -42,7 +42,7 @@ body {
   font: 60px/60px "Libre Franklin";
   font-weight: 600;
   transform: translate(-50%, -50%);
-  letter-spacing: -5px;
+  letter-spacing: -1px;
   mix-blend-mode: overlay;
   text-shadow: 0 0 10px #fff;
   color: #fff8;
