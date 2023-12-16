@@ -11,6 +11,7 @@
     
     <script>
       function setMainTextArea() {
+        var originalSitePv = document.getElementById("busuanzi_value_site_pv").textContent;
         var elementMainTextArea = document.getElementById("mainTextArea");
         var userLanguages = navigator.languages || [navigator.language || navigator.userLanguage];
         var excited__they_may_understand_meme = userLanguages.some(function(language) {return language.indexOf("zh") === 0;});
@@ -18,15 +19,16 @@
           console.log("Excited! 🚣");
           elementMainTextArea.innerHTML = `
                 ⌜<br> 不要总想搞个<br><a class="child-big">大新闻.</a><br>⌞<br>
-                <span class="child-small" id="busuanzi_container_site_pv"> + <span id="busuanzi_value_site_pv"></span> s </span>
+                <span class="child-small" id="busuanzi_container_site_pv"> + <span id="busuanzi_value_site_pv">${originalSitePv}</span> s </span>
           `;
         } else {
           console.log("Aloha! 🍷🎸🎶🎵🌅 󠁳 🏴󠁵󠁳󠁨󠁩󠁿");
           elementMainTextArea.innerHTML = `
                 ⌜<br> Stay young, stay simple. <br><a class="child-big">Sometimes Naive.</a><br>⌞<br>
-                <span class="child-small" id="busuanzi_container_site_pv"> + <span id="busuanzi_value_site_pv"></span> sec </span>
+                <span class="child-small" id="busuanzi_container_site_pv"> + <span id="busuanzi_value_site_pv">${originalSitePv}</span> sec </span>
           `;
         }
+      }
     </script>
     
   </head>
