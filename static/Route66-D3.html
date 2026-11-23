@@ -1,0 +1,120 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name=claude:viewport-fit-sides content=cover><style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-right:env(safe-area-inset-right,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}</style><style>.md-table{overflow-x:auto}@media print{.md-table{overflow-x:visible}}</style><style>:root{color-scheme:light dark;--md-bg:#fff;--md-text:rgba(0,0,0,.8);--md-muted:rgba(0,0,0,.6);--md-fill:rgba(0,0,0,.04);--md-fill-strong:rgba(0,0,0,.06);--md-rule:rgba(0,0,0,.1);--md-rule-strong:rgba(0,0,0,.16);--md-link:hsl(210 100% 45%)}@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])){--md-bg:#0d0d0d;--md-text:rgba(255,255,255,.85);--md-muted:rgba(255,255,255,.6);--md-fill:rgba(255,255,255,.06);--md-fill-strong:rgba(255,255,255,.09);--md-rule:rgba(255,255,255,.14);--md-rule-strong:rgba(255,255,255,.22);--md-link:hsl(210 100% 72%)}}:root[data-theme="dark"]{color-scheme:dark;--md-bg:#0d0d0d;--md-text:rgba(255,255,255,.85);--md-muted:rgba(255,255,255,.6);--md-fill:rgba(255,255,255,.06);--md-fill-strong:rgba(255,255,255,.09);--md-rule:rgba(255,255,255,.14);--md-rule-strong:rgba(255,255,255,.22);--md-link:hsl(210 100% 72%)}:root[data-theme="light"]{color-scheme:light}@media print{:root,:root[data-theme="dark"]{color-scheme:light;--md-bg:#fff;--md-text:rgba(0,0,0,.8);--md-muted:rgba(0,0,0,.6);--md-fill:rgba(0,0,0,.04);--md-fill-strong:rgba(0,0,0,.06);--md-rule:rgba(0,0,0,.1);--md-rule-strong:rgba(0,0,0,.16);--md-link:hsl(210 100% 45%)}}body{background:var(--md-bg);color:var(--md-text);max-width:720px;margin:0 auto;padding:32px;display:flex;flex-direction:column;gap:10px;font:14px/1.55 -apple-system,BlinkMacSystemFont,'SF Pro','Segoe UI',sans-serif;overflow-wrap:break-word}body>:first-child{margin-top:0}h1,h2,h3,h4,h5,h6{margin:6px 0 0;line-height:1.25;font-weight:600;text-wrap:balance}h1{font-size:1.35em}h2{font-size:1.15em;color:var(--md-muted)}h3,h4,h5,h6{font-size:1em}p,ul,ol,blockquote,table,pre,hr{margin:0}strong{font-weight:600}a{color:var(--md-link);text-decoration:none}a:hover{text-decoration:underline}ul,ol{display:flex;flex-direction:column;gap:6px;padding-inline-start:22px}ul{list-style:disc}ol{list-style:decimal}li[dir]{text-align:start}:is(li,td,th)>*+:is(p,ul,ol,blockquote){margin-top:6px}blockquote{display:flex;flex-direction:column;gap:10px;border-inline-start:2px solid var(--md-rule);padding-inline-start:10px;color:var(--md-muted)}:not(pre)>code{background:var(--md-fill);padding:1px 3px;border-radius:4px;font:.92em 'SF Mono',ui-monospace,Menlo,Consolas,monospace}a>code{background:none;color:inherit}pre{background:var(--md-fill);padding:10px 12px;border-radius:6px;overflow-x:auto;font:12px/1.5 'SF Mono',ui-monospace,Menlo,Consolas,monospace;margin-block:4px}pre code{background:none;padding:0;font:inherit}[dir=rtl] pre{direction:ltr;text-align:left}[dir=rtl] code{direction:ltr;unicode-bidi:isolate}table{width:100%;border-collapse:separate;border-spacing:2px;font:inherit}th,td{padding:6px 8px;border-radius:3px;text-align:start;vertical-align:top}th{background:var(--md-fill-strong);font-weight:600}td{background:var(--md-fill)}:is(th,td) :not(pre)>code{background:transparent}hr{border:0;border-top:1px solid var(--md-rule-strong);margin-block:10px}img{max-width:100%;height:auto;border-radius:4px}</style>
+</head><body>
+<h1>Route 66 · D3｜Carthage → Oklahoma City 分段导航链接</h1>
+<p>2026年11月23日（周一）· CST</p>
+<h2>使用方法</h2>
+<ul>
+<li>从第 0 段开始。每到一站、停好车之后，再打开下一段链接。</li>
+<li>所有链接都开了「避开收费」（<code>!2b1</code>）。第 1 段另外开了「避开高速」（<code>!1b1</code>）。</li>
+<li>手机 App 打开链接时，路线选项不一定都会保留。开始导航前，到「路线选项」里确认一下勾选的项目。</li>
+<li><strong>Buck Atom 之后二选一：</strong> 时间和日照都充足，就走 A 线（7A → 7B）。如果 12:45–13:00 以后才离开 Buck Atom，或者预计赶不上 16:00–16:45 到酒店，就走第 8 段。OKC 日落约 17:19。</li>
+</ul>
+<h2>参数速查（data 字段）</h2>
+<div class="md-table" role="group" aria-label="Table" tabindex="0"><table>
+<thead>
+<tr>
+<th>设置</th>
+<th>data 串</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>仅避开收费</td>
+<td><code>/data=!4m4!4m3!2m1!2b1!3e0</code></td>
+</tr>
+<tr>
+<td>避开收费 + 避开高速</td>
+<td><code>/data=!4m5!4m4!2m2!1b1!2b1!3e0</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code>!1b1</code> 表示避开高速，<code>!2b1</code> 表示避开收费，<code>!3b1</code> 表示避开轮渡，<code>!3e0</code> 表示驾车。<code>!Nm</code> 后面的数字是它后面子字段的个数，所以每多加一个选项，外面几层的计数都要一起加 1。</p>
+<hr>
+<h2>0｜当前位置 → 66 Drive-In Theatre</h2>
+<ul>
+<li><strong>起点：</strong> 当前位置（Carthage 的 Airbnb）</li>
+<li><strong>终点：</strong> 66 Drive-In Theatre，17231 Old 66 Blvd, Carthage, MO</li>
+<li><strong>设置：</strong> 避开收费</li>
+<li><a href="https://www.google.com/maps/dir//66%20Drive-In%20Theatre%2C%2017231%20Old%2066%20Blvd%2C%20Carthage%2C%20MO/data=!4m4!4m3!2m1!2b1!3e0">打开导航</a></li>
+</ul>
+<h2>1｜66 Drive-In → Cars on the Route（Galena）</h2>
+<ul>
+<li><strong>起点：</strong> 66 Drive-In Theatre</li>
+<li><strong>途经：</strong> Old 66 Blvd &amp; Hyacinth Rd → Carterville（Pine &amp; Main）→ Webb City（Broadway &amp; Webb）→ Joplin（Range Line &amp; Zora → Florida &amp; Utica → Euclid &amp; St Louis → 7th &amp; St Louis）</li>
+<li><strong>终点：</strong> Cars on the Route，119 N Main St, Galena, KS</li>
+<li><strong>设置：</strong> 避开收费 + 避开高速</li>
+<li><strong>核对：</strong> 已测试，全程走老路。路线依次是 Old 66 Blvd → Index Rd → Old 66 Blvd → Pine St → Main St → Broadway → Madison St → Range Line Rd → Zora St → Florida Ave → Utica St → Euclid Ave → St Louis Ave → 7th St → W Old 66 Blvd → Front St → Galena Main St。</li>
+<li><a href="https://www.google.com/maps/dir/66%20Drive-In%20Theatre%2C%2017231%20Old%2066%20Blvd%2C%20Carthage%2C%20MO/Old%2066%20Blvd%20%26%20Hyacinth%20Rd%2C%20Carthage%2C%20MO/N%20Pine%20St%20%26%20E%20Main%20St%2C%20Carterville%2C%20MO/W%20Broadway%20St%20%26%20N%20Webb%20St%2C%20Webb%20City%2C%20MO/N%20Range%20Line%20Rd%20%26%20E%20Zora%20St%2C%20Joplin%2C%20MO/N%20Florida%20Ave%20%26%20E%20Utica%20St%2C%20Joplin%2C%20MO/N%20Euclid%20Ave%20%26%20N%20St%20Louis%20Ave%2C%20Joplin%2C%20MO/E%207th%20St%20%26%20S%20St%20Louis%20Ave%2C%20Joplin%2C%20MO/Cars%20on%20the%20Route%2C%20119%20N%20Main%20St%2C%20Galena%2C%20KS/data=!4m5!4m4!2m2!1b1!2b1!3e0">打开导航</a></li>
+</ul>
+<h2>2｜Cars on the Route → Rainbow Bridge</h2>
+<ul>
+<li><strong>起点：</strong> Cars on the Route, Galena</li>
+<li><strong>终点：</strong> Rainbow Bridge（坐标 37.0734681, −94.7408105，导航里显示为一串坐标）</li>
+<li><strong>设置：</strong> 避开收费</li>
+<li><strong>核对：</strong> 已测试。路线是 KS-66 / 7th St → 环岛 → SE Beasley Rd → SE Rainbow Rd。</li>
+<li><a href="https://www.google.com/maps/dir/Cars%20on%20the%20Route%2C%20119%20N%20Main%20St%2C%20Galena%2C%20KS/37.0734681%2C-94.7408105/data=!4m4!4m3!2m1!2b1!3e0">打开导航</a></li>
+</ul>
+<h2>3｜Rainbow Bridge → Kansas Route 66 Visitors Center</h2>
+<ul>
+<li><strong>起点：</strong> Rainbow Bridge</li>
+<li><strong>终点：</strong> Kansas Route 66 Visitors Center，940 Military Ave, Baxter Springs, KS</li>
+<li><strong>设置：</strong> 避开收费</li>
+<li><strong>核对：</strong> 已测试。路线是 SE 50th St → W 3rd St → Military Ave。</li>
+<li><a href="https://www.google.com/maps/dir/37.0734681%2C-94.7408105/Kansas%20Route%2066%20Visitors%20Center%2C%20940%20Military%20Ave%2C%20Baxter%20Springs%2C%20KS/data=!4m4!4m3!2m1!2b1!3e0">打开导航</a></li>
+</ul>
+<h2>4｜Visitors Center → Dairy King（Commerce）</h2>
+<ul>
+<li><strong>起点：</strong> Kansas Route 66 Visitors Center</li>
+<li><strong>终点：</strong> Dairy King，100 N Main St, Commerce, OK</li>
+<li><strong>设置：</strong> 避开收费</li>
+<li><strong>核对：</strong> 已测试。路线是沿 US Route 66 经 Quapaw，再走 Doug Furnas Blvd → S Main St。</li>
+<li><a href="https://www.google.com/maps/dir/Kansas%20Route%2066%20Visitors%20Center%2C%20940%20Military%20Ave%2C%20Baxter%20Springs%2C%20KS/Dairy%20King%2C%20100%20N%20Main%20St%2C%20Commerce%2C%20OK/data=!4m4!4m3!2m1!2b1!3e0">打开导航</a></li>
+</ul>
+<h2>5｜Dairy King → Blue Whale of Catoosa</h2>
+<ul>
+<li><strong>起点：</strong> Dairy King, Commerce</li>
+<li><strong>终点：</strong> Blue Whale of Catoosa，2600 OK-66, Catoosa, OK</li>
+<li><strong>设置：</strong> 避开收费</li>
+<li><strong>核对：</strong> Google 给出的是连续约 80 英里的 Route 66，没有走 Will Rogers Turnpike。Miami → Afton → Vinita 这一段只看到汇总文字，没有逐路口核对。Claremore 的两车道老线（Stuart Roosa Dr → J.M. Davis Blvd）没有包含在内。</li>
+<li><a href="https://www.google.com/maps/dir/Dairy%20King%2C%20100%20N%20Main%20St%2C%20Commerce%2C%20OK/Blue%20Whale%20of%20Catoosa%2C%202600%20OK-66%2C%20Catoosa%2C%20OK/data=!4m4!4m3!2m1!2b1!3e0">打开导航</a></li>
+</ul>
+<h2>6｜Blue Whale → Buck Atom’s Cosmic Curios（Tulsa）</h2>
+<ul>
+<li><strong>起点：</strong> Blue Whale of Catoosa</li>
+<li><strong>途经：</strong> Cherokee St &amp; N 193rd E Ave → 11th St 分别与 193rd、Garnett、Mingo、Yale、Harvard 的路口</li>
+<li><strong>终点：</strong> Buck Atom’s Cosmic Curios on 66，1347 E 11th St, Tulsa, OK</li>
+<li><strong>设置：</strong> 避开收费</li>
+<li><strong>核对：</strong> 已测试，全程走老路，没有上 I-44。路线是 E Pine St → Cherokee St → 193rd E Ave → E 11th St 一直向西。</li>
+<li><a href="https://www.google.com/maps/dir/Blue%20Whale%20of%20Catoosa%2C%202600%20OK-66%2C%20Catoosa%2C%20OK/Cherokee%20St%20%26%20N%20193rd%20E%20Ave%2C%20Catoosa%2C%20OK/E%2011th%20St%20%26%20S%20193rd%20E%20Ave%2C%20Tulsa%2C%20OK/E%2011th%20St%20%26%20S%20Garnett%20Rd%2C%20Tulsa%2C%20OK/E%2011th%20St%20%26%20S%20Mingo%20Rd%2C%20Tulsa%2C%20OK/E%2011th%20St%20%26%20S%20Yale%20Ave%2C%20Tulsa%2C%20OK/E%2011th%20St%20%26%20S%20Harvard%20Ave%2C%20Tulsa%2C%20OK/Buck%20Atom%27s%20Cosmic%20Curios%20on%2066%2C%201347%20E%2011th%20St%2C%20Tulsa%2C%20OK/data=!4m4!4m3!2m1!2b1!3e0">打开导航</a></li>
+</ul>
+<h2>7A｜Buck Atom → Arcadia Round Barn（A 线）</h2>
+<ul>
+<li><strong>起点：</strong> Buck Atom’s Cosmic Curios</li>
+<li><strong>途经：</strong> W 12th St &amp; Southwest Blvd → Southwest Blvd 分别与 23rd、41st、51st St 的路口 → Frankoma Rd &amp; W 81st St S → N Mission St &amp; E Lee Ave（Sapulpa）→ W Dewey Ave &amp; S Main St（Sapulpa）</li>
+<li><strong>终点：</strong> Arcadia Round Barn，107 OK-66, Arcadia, OK</li>
+<li><strong>设置：</strong> 避开收费</li>
+<li><strong>核对：</strong> 已测试，没有上 I-244 或 I-44。路线是 10th St → 12th St → Southwest Blvd → Frankoma Rd → New Sapulpa Rd → Mission St，Sapulpa 之后全程 OK-66。在 Sapulpa 市区，Google 会绕 Line Ave 和 Main St 走约 1.5 英里城区街道。Ozark Trail、Kellyville、Depew、Stroud 这几处可选的老路小环线没有包含在内。</li>
+<li><a href="https://www.google.com/maps/dir/Buck%20Atom%27s%20Cosmic%20Curios%20on%2066%2C%201347%20E%2011th%20St%2C%20Tulsa%2C%20OK/W%2012th%20St%20%26%20Southwest%20Blvd%2C%20Tulsa%2C%20OK/Southwest%20Blvd%20%26%20W%2023rd%20St%2C%20Tulsa%2C%20OK/Southwest%20Blvd%20%26%20W%2041st%20St%2C%20Tulsa%2C%20OK/Southwest%20Blvd%20%26%20W%2051st%20St%2C%20Tulsa%2C%20OK/Frankoma%20Rd%20%26%20W%2081st%20St%20S%2C%20Tulsa%2C%20OK/N%20Mission%20St%20%26%20E%20Lee%20Ave%2C%20Sapulpa%2C%20OK/W%20Dewey%20Ave%20%26%20S%20Main%20St%2C%20Sapulpa%2C%20OK/Arcadia%20Round%20Barn%2C%20107%20OK-66%2C%20Arcadia%2C%20OK/data=!4m4!4m3!2m1!2b1!3e0">打开导航</a></li>
+</ul>
+<h2>7B｜Arcadia Round Barn → 酒店（A 线）</h2>
+<ul>
+<li><strong>起点：</strong> Arcadia Round Barn</li>
+<li><strong>终点：</strong> TownePlace Suites by Marriott Oklahoma City Airport，4601 SW 15th St, Oklahoma City, OK 73128</li>
+<li><strong>设置：</strong> 避开收费。这一段不开避开高速，走最快的合法道路。</li>
+<li><strong>核对：</strong> 已测试。路线是 I-35 S → I-44 → 119 出口 → SW 15th St。</li>
+<li><a href="https://www.google.com/maps/dir/Arcadia%20Round%20Barn%2C%20107%20OK-66%2C%20Arcadia%2C%20OK/TownePlace%20Suites%2C%204601%20SW%2015th%20St%2C%20Oklahoma%20City%2C%20OK%2073128/data=!4m4!4m3!2m1!2b1!3e0">打开导航</a></li>
+</ul>
+<h2>8｜Buck Atom → 酒店直达（B 线）</h2>
+<ul>
+<li><strong>起点：</strong> Buck Atom’s Cosmic Curios</li>
+<li><strong>途经：</strong> 和 7A 相同（Southwest Blvd → Frankoma Rd → Sapulpa）</li>
+<li><strong>终点：</strong> TownePlace Suites, OKC</li>
+<li><strong>设置：</strong> 避开收费</li>
+<li><strong>核对：</strong> Sapulpa 以前的部分和 7A 相同，已经测过。Sapulpa 之后到酒店这一段没有单独测试。打开后先确认蓝线经过 Bristow、Stroud 和 Chandler，并且没有走 Turner Turnpike。</li>
+<li><a href="https://www.google.com/maps/dir/Buck%20Atom%27s%20Cosmic%20Curios%20on%2066%2C%201347%20E%2011th%20St%2C%20Tulsa%2C%20OK/W%2012th%20St%20%26%20Southwest%20Blvd%2C%20Tulsa%2C%20OK/Southwest%20Blvd%20%26%20W%2023rd%20St%2C%20Tulsa%2C%20OK/Southwest%20Blvd%20%26%20W%2041st%20St%2C%20Tulsa%2C%20OK/Southwest%20Blvd%20%26%20W%2051st%20St%2C%20Tulsa%2C%20OK/Frankoma%20Rd%20%26%20W%2081st%20St%20S%2C%20Tulsa%2C%20OK/N%20Mission%20St%20%26%20E%20Lee%20Ave%2C%20Sapulpa%2C%20OK/W%20Dewey%20Ave%20%26%20S%20Main%20St%2C%20Sapulpa%2C%20OK/TownePlace%20Suites%2C%204601%20SW%2015th%20St%2C%20Oklahoma%20City%2C%20OK%2073128/data=!4m4!4m3!2m1!2b1!3e0">打开导航</a></li>
+</ul>
+<hr>
+<p><strong>可选：</strong> 第 6、7A、8 段加密途经点之后已经不走高速了。如果想多一层保险，可以把这几段链接末尾的 <code>!4m4!4m3!2m1!2b1!3e0</code> 换成 <code>!4m5!4m4!2m2!1b1!2b1!3e0</code>，但这几段换过之后没有实测。第 0 段和 7B 段不要加避开高速。</p>
+
+</body></html>
