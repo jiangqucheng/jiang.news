@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>D8 Seligman → Kingman</title>
+<style>
+:root {
+  --bg:#f6f3ee; --surface:#ffffff; --ink:#1f2328; --muted:#5f6670; --line:#e3ddd3;
+  --accent:#b4451f; --accent-ink:#ffffff; --accent-soft:#fbe9e1; --link:#9a3a18;
+  --tag-bg:#e8f1ea; --tag-ink:#25613a; --th:#f1ece4; --shadow:0 1px 2px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#16181b; --surface:#1f2226; --ink:#e7e3dc; --muted:#a3a9b1; --line:#33373d;
+    --accent:#e0703f; --accent-ink:#1a1a1a; --accent-soft:#3a271f; --link:#f0956a;
+    --tag-bg:#1f3426; --tag-ink:#9fd5ae; --th:#262a2f; --shadow:none;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#16181b; --surface:#1f2226; --ink:#e7e3dc; --muted:#a3a9b1; --line:#33373d;
+  --accent:#e0703f; --accent-ink:#1a1a1a; --accent-soft:#3a271f; --link:#f0956a;
+  --tag-bg:#1f3426; --tag-ink:#9fd5ae; --th:#262a2f; --shadow:none;
+}
+* { box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; scroll-padding-top:12px; }
+body { margin:0; background:var(--bg); color:var(--ink);
+  font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",sans-serif; }
+.wrap { max-width:780px; margin:0 auto; padding:0 16px 48px; }
+header.hero { padding:28px 0 12px; }
+header.hero h1 { font-size:28px; line-height:1.25; margin:0 0 6px; letter-spacing:.01em; }
+header.hero .date { color:var(--muted); font-size:15px; margin:0; }
+.intro { background:var(--accent-soft); border-left:4px solid var(--accent); border-radius:8px;
+  padding:12px 14px; margin:14px 0 4px; font-size:15px; }
+.intro p { margin:0; }
+a { color:var(--link); text-underline-offset:2px; word-break:break-word; }
+.toc { margin:16px 0 8px; }
+.chips { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
+.chips a { display:inline-block; padding:5px 11px; border:1px solid var(--line); border-radius:999px;
+  background:var(--surface); color:var(--ink); text-decoration:none; font-size:13.5px; line-height:1.4; }
+.chips a b { color:var(--accent); font-weight:700; }
+h1.part { font-size:22px; margin:36px 0 4px; padding-top:8px; border-top:2px solid var(--line); }
+section { background:var(--surface); border:1px solid var(--line); border-radius:12px;
+  padding:4px 16px 12px; margin:16px 0; box-shadow:var(--shadow); }
+section > h2 { font-size:19px; line-height:1.35; margin:14px 0 10px; display:flex; gap:10px; align-items:flex-start; }
+section.stop > h2 .num { flex:none; background:var(--accent); color:var(--accent-ink); border-radius:8px;
+  font-size:15px; padding:2px 8px; margin-top:2px; font-variant-numeric:tabular-nums; }
+.tag { display:inline-block; background:var(--tag-bg); color:var(--tag-ink); font-size:12.5px; font-weight:600;
+  border-radius:6px; padding:1px 7px; margin-left:6px; vertical-align:2px; }
+p { margin:8px 0; }
+ul, ol { padding-left:1.3em; margin:8px 0; }
+li { margin:4px 0; }
+img { display:block; max-width:100%; height:auto; border-radius:8px; margin:10px 0 4px; background:var(--th); }
+em { color:var(--muted); font-size:13px; }
+.table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; margin:10px -4px; border:1px solid var(--line); border-radius:10px; }
+table { border-collapse:collapse; width:100%; min-width:720px; font-size:14px; line-height:1.5; }
+th, td { padding:8px 10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+th { background:var(--th); font-weight:600; white-space:nowrap; }
+tr:last-child td { border-bottom:0; }
+td:first-child { white-space:nowrap; font-weight:600; color:var(--accent); }
+p.nav { margin:14px 0 4px; }
+.nav-btn { display:block; padding:11px 14px; border-radius:10px; border:1px solid var(--line);
+  background:var(--bg); color:var(--ink); text-decoration:none; font-weight:600; line-height:1.45; }
+.nav-btn::before { content:"↗ "; color:var(--accent); }
+.nav-btn.primary { background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+.nav-btn.primary::before { color:var(--accent-ink); }
+.nav-btn.optional { border-style:dashed; }
+p.nav + p { color:var(--muted); font-size:14.5px; margin-top:6px; }
+.top { position:fixed; right:14px; bottom:14px; width:42px; height:42px; border-radius:50%;
+  background:var(--accent); color:var(--accent-ink); display:flex; align-items:center; justify-content:center;
+  text-decoration:none; font-size:20px; box-shadow:0 2px 6px rgba(0,0,0,.25); }
+footer { color:var(--muted); font-size:13px; margin-top:24px; }
+@media print { .top, .toc { display:none; } section { break-inside:avoid-page; box-shadow:none; } }
+</style>
+</head>
+<body>
+<div class="wrap" id="top">
+<header class="hero"><h1>D8｜Seligman → Kingman</h1><p class="date">2026年11月28日 · 星期六　｜　全日 Arizona MST</p></header>
+<div class="intro">
+<p>【11/28 修订三】Hackberry 按网上资料改为约 45 分钟（原 80 分钟），之后各站全部提前约 35 分钟：午饭约 12:25，Mr D'z 仍保留约 90 分钟（含午饭），Route 66 博物馆不用再赶 15:00 截止入场，约 15:40 入住。<br />
+【修订二】取消 Angel &amp; Vilma's 补访和 Seligman 主街晨拍，早上在住宿吃完早饭，09:00 直接出发。<br />
+全程沿 AZ-66／Historic Route 66 向西，不走 I-40，也不走 Oatman 山路。新增 6 处路边短停：Grand Canyon Caverns 门口（只拍外观，不买票、不下洞）、Peach Springs Osterman 老加油站、Truxton Frontier Motel 招牌、Valentine 老校舍、Antares Point 的 Giganticus Headicus、Kingman Locomotive Park。另外：原来只看外观的 Powerhouse 改为可选进 Arizona Route 66 Museum（15:00 前入场）；回酒店路上加 El Trovatore Motel。Keepers of the Wild 不去。</p>
+</div>
+<nav class="toc" aria-label="目录"><div class="chips"><a href="#route">路线表</a><a href="#nav">导航</a><a href="#hours">开放时间</a><a href="#hotel">住宿</a><a href="#tips">提醒</a></div><div class="chips stops"><a href="#s01"><b>01</b> Grand Canyon Caverns · 门口恐龙与招牌</a><a href="#s02"><b>02</b> Peach Springs · John Osterman 老加油站</a><a href="#s03"><b>03</b> Truxton · Frontier Motel 招牌</a><a href="#s04"><b>04</b> Valentine · Truxton Canyon Training School 老校舍</a><a href="#s05"><b>05</b> Hackberry General Store · 摄影主场</a><a href="#s06"><b>06</b> Antares Point · Giganticus Headicus</a><a href="#s07"><b>07</b> Mr D&#x27;z · 午饭与复古餐厅摄影</a><a href="#s08"><b>08</b> Locomotive Park · Santa Fe 3759 蒸汽机车</a><a href="#s09"><b>09</b> Powerhouse · Arizona Route 66 Museum</a><a href="#s10"><b>10</b> El Trovatore Motel · 霓虹塔与 66 号公路地图壁画</a></div></nav>
+<section class="card" id="route"><h2>当日路线与时间</h2>
+<p><strong>早饭｜08:00–08:45 · 住宿自备早餐，装车退房</strong><br />
+<strong>午饭｜12:25–13:10 · Kingman Mr D'z（营业需复核）</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">#</th>
+<th style="text-align: left;">停靠点</th>
+<th style="text-align: left;">位置／道路</th>
+<th style="text-align: left;">距上一点车程</th>
+<th style="text-align: left;">预计到达</th>
+<th style="text-align: left;">停留</th>
+<th style="text-align: left;">离开</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">出发</td>
+<td style="text-align: left;">The Old West @ Mile High Chateau（住宿）</td>
+<td style="text-align: left;">22215 Picacho Ave, Seligman, AZ 86337</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">早饭＋退房</td>
+<td style="text-align: left;"><strong>09:00</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">01</td>
+<td style="text-align: left;">Grand Canyon Caverns 门口【新增·只拍外观】</td>
+<td style="text-align: left;">AZ-66 Mile Marker 115, Peach Springs</td>
+<td style="text-align: left;">约25英里 · 约30分钟</td>
+<td style="text-align: left;">09:30</td>
+<td style="text-align: left;">10–15分钟</td>
+<td style="text-align: left;"><strong>09:42</strong>（最迟09:50）</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">02</td>
+<td style="text-align: left;">Peach Springs · Osterman 老加油站【新增】</td>
+<td style="text-align: left;">888 Historic Route 66, Peach Springs</td>
+<td style="text-align: left;">约12英里 · 约17分钟</td>
+<td style="text-align: left;">09:59</td>
+<td style="text-align: left;">约10分钟（并入原定短休）</td>
+<td style="text-align: left;"><strong>10:09</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">03</td>
+<td style="text-align: left;">Truxton · Frontier Motel 招牌【新增】</td>
+<td style="text-align: left;">AZ-66 路边，Truxton</td>
+<td style="text-align: left;">约9英里 · 约11分钟</td>
+<td style="text-align: left;">10:20</td>
+<td style="text-align: left;">3–5分钟</td>
+<td style="text-align: left;"><strong>10:24</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">04</td>
+<td style="text-align: left;">Valentine · Truxton Canyon 老校舍【新增】</td>
+<td style="text-align: left;">AZ-66 西北侧，Music Mountain Circle</td>
+<td style="text-align: left;">约10英里 · 约12分钟</td>
+<td style="text-align: left;">10:36</td>
+<td style="text-align: left;">3–5分钟</td>
+<td style="text-align: left;"><strong>10:40</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">05</td>
+<td style="text-align: left;">Hackberry General Store【摄影主场】</td>
+<td style="text-align: left;">11255 E Route 66, Hackberry</td>
+<td style="text-align: left;">约5英里 · 约6分钟</td>
+<td style="text-align: left;">10:46</td>
+<td style="text-align: left;">约45分钟（上限60分钟）</td>
+<td style="text-align: left;"><strong>11:31</strong>（最迟11:45）</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">06</td>
+<td style="text-align: left;">Antares Point · Giganticus Headicus【新增】</td>
+<td style="text-align: left;">9855 AZ-66（Kingman 东北）</td>
+<td style="text-align: left;">约6英里 · 约7分钟</td>
+<td style="text-align: left;">11:38</td>
+<td style="text-align: left;">10–15分钟</td>
+<td style="text-align: left;"><strong>11:51</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">07</td>
+<td style="text-align: left;">Mr D'z · 午饭与门面摄影</td>
+<td style="text-align: left;">105 E Andy Devine Ave, Kingman</td>
+<td style="text-align: left;">约23英里 · 约30–35分钟</td>
+<td style="text-align: left;">12:24</td>
+<td style="text-align: left;">午饭45分钟＋摄影45分钟</td>
+<td style="text-align: left;">13:55（步行）</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">08</td>
+<td style="text-align: left;">Locomotive Park【新增】</td>
+<td style="text-align: left;">310 W Beale St（Powerhouse 对面）</td>
+<td style="text-align: left;">步行约3分钟（不挪车）</td>
+<td style="text-align: left;">13:55</td>
+<td style="text-align: left;">约15分钟</td>
+<td style="text-align: left;">14:10（步行）</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">09</td>
+<td style="text-align: left;">Powerhouse · Arizona Route 66 Museum（可选进馆）</td>
+<td style="text-align: left;">120 W Andy Devine Ave</td>
+<td style="text-align: left;">步行约1分钟</td>
+<td style="text-align: left;">14:10</td>
+<td style="text-align: left;">约60分钟（15:00截止入场，不赶）</td>
+<td style="text-align: left;"><strong>15:15</strong> 回车开走</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10</td>
+<td style="text-align: left;">El Trovatore Motel【新增】</td>
+<td style="text-align: left;">1440 E Andy Devine Ave</td>
+<td style="text-align: left;">约1.6英里 · 约4分钟</td>
+<td style="text-align: left;">15:19</td>
+<td style="text-align: left;">约15分钟</td>
+<td style="text-align: left;"><strong>15:35</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">Best Western Plus A Wayfarer's Inn &amp; Suites</td>
+<td style="text-align: left;">2815 E Andy Devine Ave, Kingman, AZ 86401</td>
+<td style="text-align: left;">约1.9英里 · 约4分钟</td>
+<td style="text-align: left;">15:39</td>
+<td style="text-align: left;">入住（15:30起）</td>
+<td style="text-align: left;">—</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">可选</td>
+<td style="text-align: left;">El Trovatore 傍晚霓虹</td>
+<td style="text-align: left;">同上</td>
+<td style="text-align: left;">酒店往返各约4分钟</td>
+<td style="text-align: left;">17:10</td>
+<td style="text-align: left;">20–30分钟</td>
+<td style="text-align: left;">17:45 回酒店</td>
+</tr>
+</tbody>
+</table></div>
+<p>到达时间都是当地 MST。车程是按路网估算的，出发前以 Google Maps 为准。Seligman 日出约 07:19；Kingman 日落约 17:25，蓝调约到 17:50。天气、排队或施工导致晚点时，按下方"当天调整与提醒"里的删减顺序调整。</p>
+</section><h1 class="part">分段导航与当晚抵达</h1>
+<section class="card" id="nav"><h2>Google Maps · D8 逐站导航（0–8）</h2>
+<p>从 0 开始。每到一站停好车，再打开下一段。每段只设起点和终点，不加途经点。全部开启"避开高速"，让路线留在 AZ-66 和 Kingman 市区的 Andy Devine Ave 上，不跳上 I-40。导航不能确认封路、停车或营业，出发前核对蓝线，实际以路标为准。</p>
+<p class="nav"><a class="nav-btn primary" href="https://www.google.com/maps/dir/?api=1&amp;origin=22215%20Picacho%20Avenue%2C%20Seligman%2C%20AZ%2086337&amp;destination=Hackberry%20General%20Store%2C%2011255%20E%20Route%2066%2C%20Hackberry%2C%20AZ%2086411&amp;travelmode=driving&amp;waypoints=Grand%20Canyon%20Caverns%20%26%20Inn%2C%20Route%2066%20Mile%20Marker%20115%2C%20Peach%20Springs%2C%20AZ%2086434%7CJohn%20Osterman%20Gas%20Station%2C%20888%20Historic%20Route%2066%2C%20Peach%20Springs%2C%20AZ%2086434%7CFrontier%20Motel%2C%20Historic%20Route%2066%2C%20Truxton%2C%20AZ%2086434%7CTruxton%20Canyon%20Training%20School%2C%20Valentine%2C%20AZ%2086437&amp;avoid=highways" target="_blank" rel="noopener">一键版 0–4｜Seligman 住宿 → Grand Canyon Caverns → Osterman 加油站 → Frontier Motel → 老校舍 → Hackberry</a></p>
+<p>一条链接串起第 0–4 段：约 61 英里、约 76 分钟纯车程，按顺序经过 4 个途经点，终点是 Hackberry。09:00 出发前打开一次即可，每到一站停车拍完，在导航里点"继续"开往下一个途经点。用 Google Maps App 打开：手机浏览器最多只认 3 个途经点，这条有 4 个。如果某个途经点定位不对或导航出错，改用下面的分段链接 0–4。</p>
+<p class="nav"><a class="nav-btn" href="https://www.google.com/maps/dir/?api=1&amp;origin=22215%20Picacho%20Avenue%2C%20Seligman%2C%20AZ%2086337&amp;destination=Grand%20Canyon%20Caverns%20%26%20Inn%2C%20Route%2066%20Mile%20Marker%20115%2C%20Peach%20Springs%2C%20AZ%2086434&amp;travelmode=driving&amp;avoid=highways" target="_blank" rel="noopener">0. Seligman 住宿 → Grand Canyon Caverns</a></p>
+<p>约25英里、30分钟，09:00 出发，09:30 到。出镇沿 Historic Route 66／AZ-66 向西，别让导航改走 I-40。沿途有 Burma-Shave 复刻路牌和 Aubrey Valley 开阔草原，坐副驾的人车上拍，不在路肩停车。</p>
+<p class="nav"><a class="nav-btn" href="https://www.google.com/maps/dir/?api=1&amp;origin=Grand%20Canyon%20Caverns%20%26%20Inn%2C%20Route%2066%20Mile%20Marker%20115%2C%20Peach%20Springs%2C%20AZ%2086434&amp;destination=John%20Osterman%20Gas%20Station%2C%20888%20Historic%20Route%2066%2C%20Peach%20Springs%2C%20AZ%2086434&amp;travelmode=driving&amp;avoid=highways" target="_blank" rel="noopener">1. Grand Canyon Caverns → Osterman 老加油站（Peach Springs）</a></p>
+<p>约12英里、17分钟，09:42 出发，09:59 到。</p>
+<p class="nav"><a class="nav-btn" href="https://www.google.com/maps/dir/?api=1&amp;origin=John%20Osterman%20Gas%20Station%2C%20888%20Historic%20Route%2066%2C%20Peach%20Springs%2C%20AZ%2086434&amp;destination=Frontier%20Motel%2C%20Historic%20Route%2066%2C%20Truxton%2C%20AZ%2086434&amp;travelmode=driving&amp;avoid=highways" target="_blank" rel="noopener">2. Peach Springs → Frontier Motel（Truxton）</a></p>
+<p>约9英里、11分钟，10:09 出发，10:20 到。招牌在路边，找安全的路外空地短停。</p>
+<p class="nav"><a class="nav-btn" href="https://www.google.com/maps/dir/?api=1&amp;origin=Frontier%20Motel%2C%20Historic%20Route%2066%2C%20Truxton%2C%20AZ%2086434&amp;destination=Truxton%20Canyon%20Training%20School%2C%20Valentine%2C%20AZ%2086437&amp;travelmode=driving&amp;avoid=highways" target="_blank" rel="noopener">3. Truxton → Truxton Canyon 老校舍（Valentine）</a></p>
+<p>约10英里、12分钟，10:24 出发，10:36 到。快到 Valentine 时会经过 Keepers of the Wild，路过不进。校舍是 AZ-66 西北侧的红砖两层楼。导航终点如果落进居民区小路，就在 AZ-66 旁安全处停车远拍。</p>
+<p class="nav"><a class="nav-btn" href="https://www.google.com/maps/dir/?api=1&amp;origin=Truxton%20Canyon%20Training%20School%2C%20Valentine%2C%20AZ%2086437&amp;destination=Hackberry%20General%20Store%2C%2011255%20E%20Route%2066%2C%20Hackberry%2C%20AZ%2086411&amp;travelmode=driving&amp;avoid=highways" target="_blank" rel="noopener">4. Valentine → Hackberry General Store</a></p>
+<p>约5英里、6分钟，10:40 出发，10:46 到。</p>
+<p class="nav"><a class="nav-btn" href="https://www.google.com/maps/dir/?api=1&amp;origin=Hackberry%20General%20Store%2C%2011255%20E%20Route%2066%2C%20Hackberry%2C%20AZ%2086411&amp;destination=Giganticus%20Headicus%2C%209855%20AZ-66%2C%20Kingman%2C%20AZ%2086401&amp;travelmode=driving&amp;avoid=highways" target="_blank" rel="noopener">5. Hackberry → Giganticus Headicus（Antares Point）</a></p>
+<p>约6英里、7分钟，11:31 出发，11:38 到。大头像在 AZ-66 和 Antares Rd 一带的路边。</p>
+<p class="nav"><a class="nav-btn" href="https://www.google.com/maps/dir/?api=1&amp;origin=Giganticus%20Headicus%2C%209855%20AZ-66%2C%20Kingman%2C%20AZ%2086401&amp;destination=Mr.%20D%27z%20Route%2066%20Diner%2C%20105%20E%20Andy%20Devine%20Ave%2C%20Kingman%2C%20AZ%2086401&amp;travelmode=driving&amp;avoid=highways" target="_blank" rel="noopener">6. Antares Point → Mr D'z（Kingman）</a></p>
+<p>约23英里、30–35分钟，11:51 出发，12:24 到。Antares 弯道后一路向南进 Kingman，会经过当晚酒店附近，再沿 Andy Devine Ave 到市中心。停好车后，Mr D'z、Locomotive Park 和 Powerhouse 都步行，不挪车。</p>
+<p class="nav"><a class="nav-btn" href="https://www.google.com/maps/dir/?api=1&amp;origin=Mr.%20D%27z%20Route%2066%20Diner%2C%20105%20E%20Andy%20Devine%20Ave%2C%20Kingman%2C%20AZ%2086401&amp;destination=El%20Trovatore%20Motel%2C%201440%20E%20Andy%20Devine%20Ave%2C%20Kingman%2C%20AZ%2086401&amp;travelmode=driving&amp;avoid=highways" target="_blank" rel="noopener">7. Mr D'z → El Trovatore Motel</a></p>
+<p>约1.6英里、4分钟，15:15 出发，15:19 到。</p>
+<p class="nav"><a class="nav-btn" href="https://www.google.com/maps/dir/?api=1&amp;origin=El%20Trovatore%20Motel%2C%201440%20E%20Andy%20Devine%20Ave%2C%20Kingman%2C%20AZ%2086401&amp;destination=Best%20Western%20Plus%20A%20Wayfarer%27s%20Inn%20%26%20Suites%2C%202815%20E%20Andy%20Devine%20Ave%2C%20Kingman%2C%20AZ%2086401&amp;travelmode=driving&amp;avoid=highways" target="_blank" rel="noopener">8. El Trovatore → Wayfarer's Inn（当晚酒店）</a></p>
+<p>约1.9英里、4分钟，15:35 出发，15:39 到，入住（15:30 起可入住）。</p>
+<p class="nav"><a class="nav-btn optional" href="https://www.google.com/maps/dir/?api=1&amp;origin=Best%20Western%20Plus%20A%20Wayfarer%27s%20Inn%20%26%20Suites%2C%202815%20E%20Andy%20Devine%20Ave%2C%20Kingman%2C%20AZ%2086401&amp;destination=El%20Trovatore%20Motel%2C%201440%20E%20Andy%20Devine%20Ave%2C%20Kingman%2C%20AZ%2086401&amp;travelmode=driving&amp;avoid=highways" target="_blank" rel="noopener">可选｜酒店 → El Trovatore（傍晚霓虹）</a></p>
+<p>17:10 出发，拍到约17:45。回程用第8段。只是市区约4分钟的短程，不想天黑后开车就跳过。</p>
+</section><section class="card" id="hours"><h2>周六景点开放与服务｜11月28日 · MST</h2>
+<p><strong>Grand Canyon Caverns</strong>｜今天照常营业，11/16 起餐厅 09:00–18:00。11/30–12/8 因水管维修暂停导览，不影响今天。本次只拍门口，不买票。 ｜ <a href="https://gccaverns.com/" target="_blank" rel="noopener">官网</a></p>
+<p><strong>Osterman 老加油站</strong>｜封窗关闭，修复中，计划 2027 年 12 月改成 Route 66 游客中心。只看外观和纪念牌。 ｜ <a href="https://www.kjzz.org/indigenous-affairs/2026-11-10/the-hualapai-tribe-is-still-pumping-new-life-into-this-old-route-66-pit-stop-on-arizona" target="_blank" rel="noopener">KJZZ 11/10</a></p>
+<p><strong>Frontier Motel（Truxton）</strong>｜旅馆和咖啡馆停业多年，现状说法不一。只拍招牌，不进场地。 ｜ <a href="https://www.legendsofamerica.com/truxton-arizona/" target="_blank" rel="noopener">Legends of America</a></p>
+<p><strong>Truxton Canyon 老校舍</strong>｜修缮中，不对外开放，NPS 说明可在路边看。 ｜ <a href="https://www.nps.gov/places/schoolhouse-at-truxton-canyon-training-school.htm" target="_blank" rel="noopener">NPS</a></p>
+<p><strong>Hackberry General Store</strong>｜秋冬 09:00–17:00（旅游局列表，年份不明）。电话 928-769-2605。 ｜ <a href="https://www.explorekingman.com/day-trip-Hackberry-General-Store" target="_blank" rel="noopener">Explore Kingman</a></p>
+<p><strong>Giganticus Headicus</strong>｜户外雕塑，全天可看，免费。旁边礼品店据第三方资料只在周五至周日 10:00–15:00 开，未核实。 ｜ <a href="https://explorekingman.com/attraction-giganticus-headicus" target="_blank" rel="noopener">Explore Kingman</a></p>
+<p><strong>Mr D'z</strong>｜多数列表写每天 07:00–21:00，但都是旧资料。电话 (928) 718-0066。 ｜ <a href="https://www.dinerville.info/az/kingman/mr-dz-route-66-diner" target="_blank" rel="noopener">Dinerville</a></p>
+<p><strong>Locomotive Park</strong>｜户外，免费。 ｜ <a href="https://www.explorekingman.com/attraction-Locomotive-Park-2/" target="_blank" rel="noopener">Explore Kingman</a></p>
+<p><strong>Arizona Route 66 Museum</strong>｜博物馆口径 09:00–16:00，<strong>15:00 截止入场</strong>（各来源不一致）。成人 $10，60岁以上 $6，12岁以下和退伍军人免费；一张票可进 3 座馆。电话 928-753-9889。 ｜ <a href="https://mohavemuseum.org/" target="_blank" rel="noopener">Mohave Museum</a>／<a href="https://www.explorekingman.com/attraction-powerhouse-route-66-museum/" target="_blank" rel="noopener">Explore Kingman</a></p>
+<p><strong>El Trovatore Motel</strong>｜在营业的汽车旅馆，只在公共区域拍，不靠近住客房门。 ｜ <a href="https://route66news.com/?p=20190" target="_blank" rel="noopener">Route 66 News</a></p>
+</section><section class="card" id="hotel"><h2>当晚住宿</h2>
+<p><strong>Best Western Plus A Wayfarer's Inn &amp; Suites</strong></p>
+<p>2815 E Andy Devine Avenue, Kingman, AZ 86401</p>
+<p>已订，确认邮件已核。Two Rooms | Suite - 3 Queen Beds，一套、3张 Queen、3位成人。15:30 起入住，免费停车，次晨早餐常规 06:00–09:30。</p>
+<p class="nav"><a class="nav-btn" href="https://www.google.com/maps/search/?api=1&amp;query=2815%20E%20Andy%20Devine%20Avenue%2C%20Kingman%2C%20AZ%2086401" target="_blank" rel="noopener">Google Maps · 导航至当晚住宿</a></p>
+</section><section class="card" id="tips"><h2>当天调整与提醒</h2>
+<ul>
+<li><strong>控制点</strong>｜09:00 离开 Seligman；09:50 前离开 Caverns；11:45 前离开 Hackberry；14:55 前到 Powerhouse 售票处（计划 14:10 到，有约 45 分钟余量），过了就只看外观。</li>
+<li><strong>晚点删减顺序</strong>｜① Route 66 Museum 改为只看外观；② Truxton 和 Valentine 改慢行不停；③ 取消 Caverns 门口停车；④ El Trovatore 白天段取消，改傍晚可选；⑤ Hackberry 压到 30 分钟（只拍外面主景）。Hackberry 和 Mr D'z 是核心，不删。</li>
+<li><strong>晚出发的处理</strong>｜出发晚多少，全天就顺延多少。如果顺延到 14:55 前到不了 Powerhouse，博物馆改为只看外观。</li>
+<li><strong>Seligman</strong>｜Angel &amp; Vilma's 补访和主街晨拍取消；Snow Cap 冬休，也不去。住宿退房最晚 11:00。</li>
+<li><strong>Caverns 只拍门口</strong>｜不买票、不下洞。洗手间可以在 Caverns 餐厅（09:00 起营业）或 Hackberry 解决。Keepers of the Wild 不去。</li>
+<li>Hackberry 和 Mr D'z 的感恩节周末营业，出发前复查（电话见上方）。</li>
+<li>Peach Springs 和 Valentine 校舍在 Hualapai 保留地范围内，只在公共区域拍，不进封闭建筑。Peach Springs 镇上没有标线人行道，铁路旁每天约 80 列货运列车经过，过马路要小心。</li>
+<li>Seligman 到 Kingman 约 90 英里，沿途补给少，出发前确认油量。</li>
+<li>D8 只到 Kingman。Cool Springs、Sitgreaves Pass 和 Oatman 完整留到 D9。</li>
+</ul>
+<p><strong>【当日超速、鲁莽驾驶与 citation】</strong></p>
+<p><a href="https://azleg.gov/ars/28/00701-02.htm" target="_blank" rel="noopener">AZ｜</a>一般公路超限速&gt;20 mph可构成 Class 3 misdemeanor（恰好+20不触发此项，但仍违法）；学校过街点及无标牌的商业／住宅区另有规则。<a href="https://azleg.gov/ars/28/00693.htm" target="_blank" rel="noopener">Reckless driving另看</a>是否鲁莽漠视人身／财产安全，无固定超速门槛。</p>
+<p>任何超速均可能被开票，无"+5／+10免罚额度"。Citation＝交通违法告知单，可含出庭通知；不等于定罪。按罚单／法院期限处理并保存结案记录；移民披露说明见总览。</p>
+</section><section class="stop" id="s01"><h2><span class="num">01</span><span class="ttl">Grand Canyon Caverns · 门口恐龙与招牌<span class="tag">新增·只拍外观</span></span></h2>
+<p><strong>位置</strong>｜Grand Canyon Caverns &amp; Inn，AZ-66 Mile Marker 115, Peach Springs, AZ 86434<br />
+<strong>车程</strong>｜距 Seligman 住宿约25英里 · 约30分钟（第0段）<br />
+<strong>到达／离开</strong>｜09:30 → <strong>09:42</strong>（预计用时10–15分钟；最迟09:50离开）</p>
+<p><strong>为什么值得停</strong>｜号称美国最大的干燥洞穴，2025年6月重新开放。门口的大恐龙和老式路边招牌是很典型的 66 号公路奇趣画面。不下洞也值得停一下，顺便上洗手间。</p>
+<p>导航定位｜Grand Canyon Caverns &amp; Inn, Peach Springs, AZ</p>
+<p><strong>到达与离开</strong></p>
+<ol type="1">
+<li>09:00 从住宿出发，沿 AZ-66 西行约30分钟，看到 Caverns 招牌后进停车区。</li>
+<li>只拍恐龙、招牌和建筑外观，不买票、不下洞。</li>
+<li>09:42 离开，回到 AZ-66 继续向西，开第1段。</li>
+</ol>
+<p>提醒｜今天照常营业；11/30–12/8 暂停导览，与今天无关。</p>
+<p><a href="https://gccaverns.com/" target="_blank" rel="noopener">参考资料 1 · gccaverns.com</a></p>
+</section><section class="stop" id="s02"><h2><span class="num">02</span><span class="ttl">Peach Springs · John Osterman 老加油站<span class="tag">新增</span></span></h2>
+<p><strong>位置</strong>｜888 Historic Route 66, Peach Springs, AZ 86434（Hualapai 保留地）<br />
+<strong>车程</strong>｜距 Caverns 约12英里 · 约17分钟（第1段）<br />
+<strong>到达／离开</strong>｜09:59 → <strong>10:09</strong>（预计用时约10分钟，并入原定的10分钟短休）</p>
+<p><strong>为什么值得停</strong>｜1929/1932 年的老加油站，列入国家史迹名录，也被评为"美国11处最濒危史迹"之一，计划 2027 年改成 Route 66 游客中心。白墙配红黄色块，紧贴公路，这里每天约 80 列 BNSF 货运列车和公路并行。</p>
+<p>导航定位｜John Osterman Gas Station, 888 Historic Route 66, Peach Springs</p>
+<p><strong>到达与离开</strong></p>
+<ol type="1">
+<li>在公共可停区域停车，拍建筑外观、老油泵和纪念牌。</li>
+<li>10:09 离开，继续 AZ-66 西行，开第2段。</li>
+</ol>
+<p>提醒｜建筑封闭修复中，不靠近、不进入；镇上没有标线人行道，过马路注意车辆和火车。</p>
+<p><a href="https://www.kjzz.org/indigenous-affairs/2026-11-10/the-hualapai-tribe-is-still-pumping-new-life-into-this-old-route-66-pit-stop-on-arizona" target="_blank" rel="noopener">参考资料 1 · KJZZ</a></p>
+</section><section class="stop" id="s03"><h2><span class="num">03</span><span class="ttl">Truxton · Frontier Motel 招牌<span class="tag">新增</span></span></h2>
+<p><strong>位置</strong>｜AZ-66 路边，Truxton, AZ 86434<br />
+<strong>车程</strong>｜距 Peach Springs 约9英里 · 约11分钟（第2段）<br />
+<strong>到达／离开</strong>｜10:20 → <strong>10:24</strong>（预计用时3–5分钟）</p>
+<p><strong>为什么值得停</strong>｜经典汽车旅馆的霓虹招牌，配上几乎空荡的小镇，"新鬼镇"氛围是这段路的典型画面。</p>
+<p>导航定位｜Frontier Motel, Truxton, AZ</p>
+<p><strong>到达与离开</strong></p>
+<ol type="1">
+<li>看到招牌后找路外空地安全停车，不停在车道或路肩上。</li>
+<li>拍招牌和建筑外观，不进入私有场地。</li>
+<li>10:24 离开，开第3段。</li>
+</ol>
+<p>提醒｜旅馆和咖啡馆基本停业，不安排用餐或洗手间。</p>
+<p><a href="https://www.legendsofamerica.com/truxton-arizona/" target="_blank" rel="noopener">参考资料 1 · legendsofamerica.com</a></p>
+</section><section class="stop" id="s04"><h2><span class="num">04</span><span class="ttl">Valentine · Truxton Canyon Training School 老校舍<span class="tag">新增</span></span></h2>
+<p><strong>位置</strong>｜AZ-66 西北侧，Music Mountain Circle 旁，Valentine, AZ 86437<br />
+<strong>车程</strong>｜距 Truxton 约10英里 · 约12分钟（第3段）<br />
+<strong>到达／离开</strong>｜10:36 → <strong>10:40</strong>（预计用时3–5分钟）</p>
+<p><strong>为什么值得停</strong>｜1903–1937 年的印第安寄宿学校，学生以 Hualapai 儿童为主，也有 Havasupai、Hopi、Navajo 等部族的孩子。红砖两层楼列入国家史迹名录，是这段路最有历史分量的建筑。</p>
+<p>导航定位｜Schoolhouse at Truxton Canyon Training School, Valentine, AZ</p>
+<p><strong>到达与离开</strong></p>
+<ol type="1">
+<li>接近 Valentine 时注意公路西北侧的红砖两层楼。</li>
+<li>在 AZ-66 旁安全处停车远拍，不开进居民区小路。</li>
+<li>10:40 离开，开第4段。</li>
+</ol>
+<p>提醒｜修缮中不开放，只在路边看；态度尊重，不进入。</p>
+<p><a href="https://www.nps.gov/places/schoolhouse-at-truxton-canyon-training-school.htm" target="_blank" rel="noopener">参考资料 1 · nps.gov</a></p>
+</section><section class="stop" id="s05"><h2><span class="num">05</span><span class="ttl">Hackberry General Store · 摄影主场</span></h2>
+<p><strong>位置</strong>｜11255 E Route 66, Hackberry, AZ 86411<br />
+<strong>车程</strong>｜距 Valentine 约5英里 · 约6分钟（第4段）<br />
+<strong>到达／离开</strong>｜10:46 → <strong>11:31</strong>（预计用时约45分钟；最迟11:45离开）</p>
+<p><img loading="lazy" src="https://commons.wikimedia.org/wiki/Special:FilePath/Hackberry_General_Store_building_AZ_2026-04-07_14-23-42.jpg?width=1000" alt="Hackberry General Store" /></p>
+<p><a href="https://commons.wikimedia.org/wiki/File:Hackberry_General_Store_building_AZ_2026-04-07_14-23-42.jpg" target="_blank" rel="noopener"><em>图片：G. Edward Johnson · CC BY 4.0 ｜ 原图与许可</em></a></p>
+<p><strong>为什么值得停</strong>｜老油泵、招牌、老车和杂货店，组成西南公路最完整的一套画面。可以和《守望先锋》Route 66 场景做视觉对应，但不称作官方确认的原型。</p>
+<p><strong>用时依据</strong>｜Komoot 写"多数游客 30 分钟到 1 小时就够看完店内和户外展品"，摄影爱好者会更久；Roadside America 建议"至少留 30 分钟"。我们是摄影为主，取 45 分钟，上限 60 分钟。</p>
+<p>导航定位｜Hackberry General Store, 11255 E Route 66, Hackberry, AZ</p>
+<p><strong>到达与离开</strong></p>
+<ol type="1">
+<li>到路边商店停车区。10:46–11:15 先拍外面（约30分钟）：门口加油棚下的红色 1957 Corvette、老油泵、院子里的老车、放 Model T 平板车的修车房、铁皮招牌和 Burma-Shave 路牌。</li>
+<li>11:15–11:30 进店（约15分钟）：老式 diner 角落、满墙纪念品和 66 号公路周边，顺便上洗手间。店内是否开放以当天为准。</li>
+<li>遇到旅游大巴或摩托车队，就先进店，等人散了再补拍外景；最多延到 11:45。</li>
+<li>11:31 离开，继续沿 AZ-66 往 Kingman 方向，开第5段，不改去 Oatman。</li>
+</ol>
+<p>提醒｜不为拍摄进入私有或封闭区域。</p>
+<p><a href="https://www.komoot.com/highlight/1670744" target="_blank" rel="noopener">参考资料 1 · Komoot</a>／<a href="https://www.roadsideamerica.com/tip/10122" target="_blank" rel="noopener">参考资料 2 · Roadside America</a>／<a href="https://route66times.com/l/az/hackberry-general-store.htm" target="_blank" rel="noopener">参考资料 3 · Route 66 Times</a></p>
+</section><section class="stop" id="s06"><h2><span class="num">06</span><span class="ttl">Antares Point · Giganticus Headicus<span class="tag">新增</span></span></h2>
+<p><strong>位置</strong>｜9855 AZ-66（Antares Point Visitor Center），Kingman, AZ 86401<br />
+<strong>车程</strong>｜距 Hackberry 约6英里 · 约7分钟（第5段）<br />
+<strong>到达／离开</strong>｜11:38 → <strong>11:51</strong>（预计用时10–15分钟）</p>
+<p><strong>为什么值得停</strong>｜艺术家 Gregg Arnold 2004 年做的14英尺绿色 Tiki 大头像，旁边还有 2021 年的 "Guardian of Route 66" 雕塑。这里也是全美最长的连续弯道之一，可以把大头像和弯道、荒漠一起入镜。</p>
+<p>导航定位｜Giganticus Headicus, 9855 AZ-66, Kingman, AZ</p>
+<p><strong>到达与离开</strong></p>
+<ol type="1">
+<li>在 Visitor Center 前的空地停车。</li>
+<li>拍大头像、Guardian 雕塑和周边装置。</li>
+<li>11:51 离开，开第6段，沿 AZ-66 南下进 Kingman。</li>
+</ol>
+<p>提醒｜雕塑全天可看；礼品店开放时间未核实，不等。</p>
+<p><a href="https://explorekingman.com/attraction-giganticus-headicus" target="_blank" rel="noopener">参考资料 1 · explorekingman.com</a>／<a href="https://www.route66news.com/tag/giganticus-headicus/" target="_blank" rel="noopener">参考资料 2 · route66news.com</a></p>
+</section><section class="stop" id="s07"><h2><span class="num">07</span><span class="ttl">Mr D&#x27;z · 午饭与复古餐厅摄影</span></h2>
+<p><strong>位置</strong>｜105 E Andy Devine Ave, Kingman, AZ 86401<br />
+<strong>车程</strong>｜距 Antares Point 约23英里 · 约30–35分钟（第6段）<br />
+<strong>到达／离开</strong>｜12:24 → 13:55 步行去 Locomotive Park（预计用时约90分钟：午饭45分钟＋摄影45分钟）</p>
+<p><img loading="lazy" src="https://commons.wikimedia.org/wiki/Special:FilePath/Mr_Dz_Route_66_Diner_Kingman_AZ_2026-04-05_17-45-03.jpg?width=1000" alt="Mr D&#39;z" /></p>
+<p><a href="https://commons.wikimedia.org/wiki/File:Mr_Dz_Route_66_Diner_Kingman_AZ_2026-04-05_17-45-03.jpg" target="_blank" rel="noopener"><em>图片：G. Edward Johnson · CC BY 4.0 ｜ 原图与许可</em></a></p>
+<p><strong>为什么值得停</strong>｜蓝粉配色的复古餐厅、老车和街边招牌，适合拍久一点。午饭和外观摄影合在一起，省掉一次挪车。</p>
+<p>导航定位｜Mr D'z Route 66 Diner, 105 E Andy Devine Ave, Kingman, AZ</p>
+<p><strong>到达与离开</strong></p>
+<ol type="1">
+<li>沿 AZ-66 进 Kingman，接 Andy Devine Ave 到餐厅；合法停车，下午三处都步行。</li>
+<li>12:25–13:10 午饭，13:10–13:55 拍门面、招牌和街景。</li>
+<li>如果不营业或排队太长，就在附近就近吃饭，保留外观摄影。</li>
+<li>13:55 往西步行约3分钟到 Locomotive Park。</li>
+</ol>
+<p><a href="https://www.dinerville.info/az/kingman/mr-dz-route-66-diner" target="_blank" rel="noopener">参考资料 1 · dinerville.info</a></p>
+</section><section class="stop" id="s08"><h2><span class="num">08</span><span class="ttl">Locomotive Park · Santa Fe 3759 蒸汽机车<span class="tag">新增</span></span></h2>
+<p><strong>位置</strong>｜310 W Beale St, Kingman, AZ 86401（Powerhouse 对面）<br />
+<strong>车程</strong>｜从 Mr D'z 步行约3分钟，不挪车<br />
+<strong>到达／离开</strong>｜13:55 → 14:10（含步行，预计用时约15分钟）</p>
+<p><strong>为什么值得停</strong>｜公园里放着 1927/28 年 Baldwin 造的 Santa Fe 3759 号蒸汽机车和一节守车，在市中心就能拍到铁路题材的 66 号公路画面，而且不用另外停车。</p>
+<p>导航定位｜Locomotive Park, Kingman, AZ</p>
+<p><strong>到达与离开</strong></p>
+<ol type="1">
+<li>沿 Andy Devine Ave 往西步行，在路口走人行横道过街。</li>
+<li>在围栏外拍机车全景和细节。</li>
+<li>14:10 过街到 Powerhouse。</li>
+</ol>
+<p><a href="https://www.explorekingman.com/attraction-Locomotive-Park-2/" target="_blank" rel="noopener">参考资料 1 · explorekingman.com</a></p>
+</section><section class="stop" id="s09"><h2><span class="num">09</span><span class="ttl">Powerhouse · Arizona Route 66 Museum（可选进馆）</span></h2>
+<p><strong>位置</strong>｜120 W Andy Devine Ave, Kingman, AZ 86401<br />
+<strong>车程</strong>｜从 Locomotive Park 步行约1分钟<br />
+<strong>到达／离开</strong>｜14:10 → 15:10 出馆，<strong>15:15</strong> 回车开走（预计用时约60分钟）</p>
+<p><strong>为什么值得停</strong>｜原计划只看外观，现在可以进馆。馆内按时间线讲 66 号公路的历史，正好给一路拍过的地标补上背景；建筑本身也是 Kingman 的地标。</p>
+<p>导航定位｜Arizona Route 66 Museum, 120 W Andy Devine Ave, Kingman, AZ</p>
+<p><strong>到达与离开</strong></p>
+<ol type="1">
+<li>15:00 前进售票处，成人 $10、60岁以上 $6。</li>
+<li>参观约60分钟。前面晚点的话，只要 15:00 前进门就照常参观；过了 15:00 就只拍外观、在游客中心补给。</li>
+<li>15:10 步行回 Mr D'z 附近取车，15:15 开第7段。</li>
+</ol>
+<p>提醒｜营业和截止入场时间各来源不一致，出发前打 928-753-9889 确认。</p>
+<p><a href="https://mohavemuseum.org/" target="_blank" rel="noopener">参考资料 1 · mohavemuseum.org</a>／<a href="https://www.explorekingman.com/attraction-powerhouse-route-66-museum/" target="_blank" rel="noopener">参考资料 2 · explorekingman.com</a></p>
+</section><section class="stop" id="s10"><h2><span class="num">10</span><span class="ttl">El Trovatore Motel · 霓虹塔与 66 号公路地图壁画<span class="tag">新增</span></span></h2>
+<p><strong>位置</strong>｜1440 E Andy Devine Ave, Kingman, AZ 86401<br />
+<strong>车程</strong>｜距 Mr D'z 约1.6英里 · 约4分钟（第7段）<br />
+<strong>到达／离开</strong>｜15:19 → <strong>15:35</strong>（预计用时约15分钟；傍晚可选再来 17:10–17:45）</p>
+<p><strong>为什么值得停</strong>｜1939 年的老汽车旅馆，有约100英尺高、已修复的霓虹塔，还有 206 英尺长、号称"世界最长 66 号公路地图"的壁画和明星主题壁画。就在回酒店的路上，白天拍壁画，傍晚拍霓虹。</p>
+<p>导航定位｜El Trovatore Motel, 1440 E Andy Devine Ave, Kingman, AZ</p>
+<p><strong>到达与离开</strong></p>
+<ol type="1">
+<li>在旅馆允许的访客停车处短停，拍地图壁画和霓虹塔。</li>
+<li>15:35 离开，开第8段回酒店入住。</li>
+<li>可选：17:10 从酒店再来拍霓虹蓝调（日落约17:25），17:45 回酒店。</li>
+</ol>
+<p>提醒｜这是在营业的旅馆，只在公共区域拍，不靠近住客房门；不想天黑开车就不回来。</p>
+<p><a href="https://route66news.com/?p=20190" target="_blank" rel="noopener">参考资料 1 · route66news.com</a>／<a href="https://waymarking.com/waymarks/wmXXJP_LONGEST_Route_66_Map_in_the_World_Kingman_Arizona_USA" target="_blank" rel="noopener">参考资料 2 · waymarking.com</a></p>
+</section>
+<footer>由 D8_Seligman_Kingman.md 转换。本页离线可读；图片和 Google Maps 链接需要网络。</footer>
+</div>
+<a class="top" href="#top" aria-label="回到顶部">↑</a>
+</body>
+</html>
